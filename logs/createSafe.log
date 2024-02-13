@@ -1,0 +1,5 @@
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): cybr-secrets.privilegecloud.cyberark.cloud:443
+DEBUG:urllib3.connectionpool:https://cybr-secrets.privilegecloud.cyberark.cloud:443 "POST /passwordvault/api/safes HTTP/1.1" 201 442
+DEBUG:root:================ createSafe() ================
+DEBUG:root:status_code: 201
+	response: Safe AWS-1234-DAT-POS-TES-TRU created successfully.

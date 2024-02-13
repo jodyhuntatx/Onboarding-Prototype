@@ -1,0 +1,56 @@
+{
+    "MySQL-ASM": {
+        "id": "MySQL-ASM",
+        "searchpairs": {
+            "platform": "aws",
+            "type": "database",
+            "subtype": "mysql"
+        },
+        "required": [
+            "USERNAME",
+            "SECRET"
+        ],
+        "allkeys": [
+            "NAME",
+            "USERNAME",
+            "SECRET",
+            "DSN",
+            "ADDRESS",
+            "PORT",
+            "DATABASE",
+            "DESCRIPTION",
+            "SecretNameInSecretStore",
+            "ENGINE",
+            "HOST",
+            "DBNAME",
+            "DBINSTANCEIDENTIFIER"
+        ]
+    },
+    "PostgreSQL-ASM": {
+        "id": "PostgreSQL-ASM",
+        "searchpairs": {
+            "platform": "aws",
+            "type": "database",
+            "subtype": "postgres"
+        },
+        "required": [
+            "USERNAME",
+            "SECRET"
+        ],
+        "allkeys": [
+            "NAME",
+            "USERNAME",
+            "SECRET",
+            "DSN",
+            "ADDRESS",
+            "PORT",
+            "DATABASE",
+            "DESCRIPTION",
+            "SecretNameInSecretStore",
+            "ENGINE",
+            "HOST",
+            "DBNAME",
+            "DBINSTANCEIDENTIFIER"
+        ]
+    }
+}
