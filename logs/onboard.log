@@ -1,5 +1,0 @@
-INFO:root:platform_id: PostgreSQL-ASM
-INFO:root:safe_name: AWS-1234-DAT-POS-TES-TRU
-INFO:root:safe_name: AWS-1234-DAT-POS-TES-TRU was created or already exists.
-INFO:root:['jody_hunt@cyberark.cloud.3357'], ['evan_litwak@cyberark.cloud.3357'] and ['SecretsHub', 'Conjur+Sync'] are now members of safe AWS-1234-DAT-POS-TES-TRU
-INFO:root:Account now exists in safe AWS-1234-DAT-POS-TES-TRU

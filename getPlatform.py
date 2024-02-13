@@ -18,13 +18,13 @@ logging.basicConfig(filename=logfile, encoding='utf-8', level=loglevel, filemode
 prov_req = json.loads(sys.argv[1].replace("+"," "))
 
 # load platform dictionary
-platfile="./plats.json"
+platfile="./platforms.json"
 with open(platfile) as f_in:
   platforms = json.load(f_in)
 
-# search platforms where platform searchkey value == request searchkey value
+# Find platform where platform search keys & values == request keys & values
 plat_id = None
-for pid in platforms.keys():   # platforms keys are platform IDs
+for pid in platforms.keys():   # top-level platforms keys are platform IDs
     search_pairs = platforms[pid]["searchpairs"]
     logging.debug(f"pid: {pid}, searchpairs: {search_pairs}")
     # all k/v pairs in searchpairs must be found in the provisioning request for a match
@@ -36,7 +36,7 @@ for pid in platforms.keys():   # platforms keys are platform IDs
             logging.debug(f"     platform: ({pkey},{pval}), request: ({pkey},{rval})")
             if rval.upper() == pval.upper():
                 pair_counter -= 1       # k/v matches, decrement searchpair counter
-                if pair_counter == 0:   # if all keys have matched...
+                if pair_counter == 0:   # if all k/v pairs have matched...
                     plat_id = pid
                     logging.info(f"Matching platform ID: {plat_id}")
                     break

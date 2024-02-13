@@ -1,9 +1,0 @@
-DEBUG:root:account_req: {'safeName': 'AWS-1234-DAT-POS-TES-TRU', 'platformID': 'PostgreSQL-ASM', 'username': 'rdsuser', 'secret': 'rdspassword', 'secretType': 'password', 'secretManagement': {'automaticManagementEnabled': True}, 'platformAccountProperties': {'address': 'rdsaddress', 'engine': 'postgres', 'host': 'foo.bar.baz', 'port': '5432', 'dbInstanceIdentifier': 'cluster2'}}
-DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): cybr-secrets.privilegecloud.cyberark.cloud:443
-DEBUG:urllib3.connectionpool:https://cybr-secrets.privilegecloud.cyberark.cloud:443 "POST /passwordvault/api/accounts HTTP/1.1" 201 469
-DEBUG:root:{"categoryModificationTime":1707841649,"platformId":"PostgreSQL-ASM","safeName":"AWS-1234-DAT-POS-TES-TRU","id":"121_3","name":"Database-PostgreSQL-ASM-rdsaddress-rdsuser","address":"rdsaddress","userName":"rdsuser","secretType":"password","platformAccountProperties":{"Port":"5432","engine":"postgres","host":"foo.bar.baz","dbInstanceIdentifier":"cluster2"},"secretManagement":{"automaticManagementEnabled":true,"lastModifiedTime":1707841648},"createdTime":1707841648}
-DEBUG:root:================ createAccount() ================
-DEBUG:root:	url: https://cybr-secrets.privilegecloud.cyberark.cloud/passwordvault/api/accounts
-	payload: {"safeName": "AWS-1234-DAT-POS-TES-TRU", "platformID": "PostgreSQL-ASM", "username": "rdsuser", "secret": "rdspassword", "secretType": "password", "secretManagement": {"automaticManagementEnabled": true}, "platformAccountProperties": {"address": "rdsaddress", "engine": "postgres", "host": "foo.bar.baz", "port": "5432", "dbInstanceIdentifier": "cluster2"}}
-DEBUG:root:	status_code: 201
-	response: Account onboarded successfully.
