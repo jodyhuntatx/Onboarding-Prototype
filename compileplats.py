@@ -4,6 +4,7 @@ import subprocess
 import requests
 import json
 import sys
+import os
 
 import logging
 logfile = "./logs/compileplats.log"
@@ -33,10 +34,15 @@ def callFunction(funcName, input_dict, success_codes):
 
 # Authenticate to CyberArk Identity
 admin_creds = {
-    "cybr_subdomain": "cybr-secrets",
-    "cybr_username": "jody_bot@cyberark.cloud.3357",
-    "cybr_password": "CyberArk11@@",
+    "cybr_subdomain": os.environ.get("CYBR_SUBDOMAIN",None),
+    "cybr_username": os.environ.get("CYBR_USERNAME",None),
+    "cybr_password": os.environ.get("CYBR_PASSWORD",None),
 }
+# Validate all creds have a value, if not exit
+none_keys = [key for key, value in admin_creds.items() if value is None]
+if none_keys:
+  print("Missing one of CYBR_SUBDOMAIN, CYBR_USERNAME, CYBR_PASSWORD environment variables.")
+  sys.exit(-1)
 
 resp_dict = callFunction("./authnCyberArk.py", admin_creds, [200])
 session_token = resp_dict["session_token"]

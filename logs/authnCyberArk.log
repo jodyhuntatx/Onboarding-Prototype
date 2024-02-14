@@ -1,0 +1,6 @@
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): cybr-secrets.cyberark.cloud:443
+DEBUG:urllib3.connectionpool:https://cybr-secrets.cyberark.cloud:443 "POST /api/idadmin/oauth2/platformtoken HTTP/1.1" 200 None
+DEBUG:root:================ authnCyberark() ================
+DEBUG:root:	url: https://cybr-secrets.cyberark.cloud/api/idadmin/oauth2/platformtoken
+	status_code: 200
+	response: Successfully authenticated to CyberArk Privilege Cloud.

@@ -1,0 +1,5 @@
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): cybr-secrets.privilegecloud.cyberark.cloud:443
+DEBUG:urllib3.connectionpool:https://cybr-secrets.privilegecloud.cyberark.cloud:443 "DELETE /passwordvault/api/safes/AWS-1234-DAT-MYS-TES-TRU HTTP/1.1" 204 0
+DEBUG:root:================ deleteSafe() ================
+DEBUG:root:status_code: 204
+	response: Safe AWS-1234-DAT-MYS-TES-TRU deleted successfully.

@@ -7,7 +7,7 @@ import urllib.parse
 
 import logging
 logfile="./logs/authnCyberArk.log"
-loglevel = logging.INFO  # WARNING: level DEBUG leaks admin creds in log
+loglevel = logging.DEBUG
 logfmode = 'w'  # w = overwrite, a = append
 logging.basicConfig(filename=logfile, encoding='utf-8', level=loglevel, filemode=logfmode)
 
@@ -23,9 +23,9 @@ cybr_username = admin_dict["cybr_username"]
 cybr_password = admin_dict["cybr_password"]
 
 # uses Pcloud creds to authenticate to CyberArk Identity
-# returns session_token (CyberArk Identity JWT) to use in further CyberArk API calls
+# returns dictionary w/ session_token (CyberArk Identity JWT) to use in further CyberArk API calls
 
-session_token = None
+session_token = ""
 status_code = 200
 response_body = "Successfully authenticated to CyberArk Privilege Cloud."
 
@@ -34,24 +34,25 @@ url = f"https://{cybr_subdomain}.cyberark.cloud/api/idadmin/oauth2/platformtoken
 payload = f"grant_type=client_credentials&client_id={urlify(cybr_username)}&client_secret={urlify(cybr_password)}"
 headers = {"Content-Type": "application/x-www-form-urlencoded"}
 response = requests.request("POST", url, headers=headers, data=payload)
-if response.status_code == 200:
+status_code = response.status_code
+if status_code == 200:
     # Parse the JSON response into a dictionary
     data = response.json()
     # Extract session token from the response dict
     session_token = data.get("access_token", None)
     if session_token is None:
+        session_token = ""
         status_code = 401
-        response_body = json.dumps(
-            f"There was a problem authenticating to: {cybr_subdomain}.privilegecloud.cyberark.cloud"
-        )
+        response_body = f"There was a problem authenticating to: {url}"
+        logging.debug(response.text)
 else:
     status_code = 500
-    response_body = json.dumps(
-        f"There was a problem authenticating to: {cybr_subdomain}.privilegecloud.cyberark.cloud"
-    )
+    response_body = f"There was a problem authenticating to: {url}"
+    logging.debug(response_body)
+    logging.debug(response.text)
 
 logging.debug("================ authnCyberark() ================")
-logging.debug(f"\turl: {url}\n\tstatus_code: {status_code}\n\tpayload: {payload}\n\tresponse: {response_body}")
+logging.debug(f"\turl: {url}\n\tstatus_code: {status_code}\n\tresponse: {response_body}")
 
 return_dict = {}
 return_dict["status_code"] = status_code

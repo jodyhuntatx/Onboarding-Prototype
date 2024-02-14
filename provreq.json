@@ -3,7 +3,7 @@
     "env": "test",
     "platform": "aws",
     "type": "database",
-    "subtype": "postgres",
+    "subtype": "mysql",
     "apprReq": "True",
     "safeAdmins": ["jody_hunt@cyberark.cloud.3357"],
     "safeFullUsers": ["evan_litwak@cyberark.cloud.3357","david_hisel@cyberark.cloud.3357"],

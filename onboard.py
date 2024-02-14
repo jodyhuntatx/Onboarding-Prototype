@@ -23,11 +23,15 @@ def marshal(dict):
 def unmarshal(procout):
     return json.loads(procout.stdout.decode().replace("'", '"'))
 
+# To debug called scripts, set capture_output to False add print statements to the script and 
+# Once the issue is resolved be sure to delete print statements and set capture_out back to True 
 def callFunction(funcName, input_dict, success_codes):
-  procout = subprocess.run([funcName, marshal(input_dict)], stdout=subprocess.PIPE)
+  procout = subprocess.run([funcName, marshal(input_dict)], capture_output=True)
   resp_dict = unmarshal(procout)
   logging.debug(f"{funcName}:\n\t\t{resp_dict}")
   if resp_dict["status_code"] not in success_codes:
+    print("{}".format(resp_dict["response_body"]))
+    print(f"Exiting due to error. See {funcName} logfile for more details.")
     logging.error(resp_dict["response_body"])
     logging.error(f"Exiting due to error. See {funcName} logfile for more details.")
     sys.exit(0)
@@ -52,35 +56,42 @@ if none_keys:
   print("Missing one of CYBR_SUBDOMAIN, CYBR_USERNAME, CYBR_PASSWORD environment variables.")
   sys.exit(-1)
 
+print("Authenticating...")
 resp_dict = callFunction("./authnCyberArk.py", admin_creds, [200])
 prov_req["session_token"] = resp_dict["session_token"]
 prov_req["cybr_subdomain"] = admin_creds["cybr_subdomain"]
 
 # Determine plaform ID based on provisioning request values
+print("Resolving platform...")
 resp_dict = callFunction("./getPlatform.py", prov_req, [200])
 prov_req["platform_id"] = resp_dict["platform_id"]
 logging.info(f"platform_id: {prov_req['platform_id']}")
 
 # Generate safe name based on provisioning request values
+print("Generating safe name...")
 resp_dict = callFunction("./getSafeName.py", prov_req, [200])
 prov_req["safe_name"] = resp_dict["safe_name"]
 logging.info(f"safe_name: {prov_req['safe_name']}")
 
-'''
+#'''
 # Delete safe
+print(f"Deleting safe...")
 resp_dict = callFunction("./deleteSafe.py", prov_req, [204])
 logging.info(f"safe_name: {prov_req['safe_name']}")
 sys.exit(0)
-'''
+#'''
 
 # Create safe
+print(f"Creating safe...")
 resp_dict = callFunction("./createSafe.py", prov_req, [201,409])
 logging.info(f"safe_name: {prov_req['safe_name']} was created or already exists.")
 
 # Add members to safe
+print("Adding members...")
 resp_dict = callFunction("./addSafeMembers.py", prov_req, [201,409])
 logging.info(f"{prov_req['safeAdmins']}, {prov_req['safeFullUsers']} and {prov_req['syncMembers']} are now members of safe {prov_req['safe_name']}")
 
 # Create account
+print("Creating account...")
 resp_dict = callFunction("./createAccount.py", prov_req, [201,409])
 logging.info(f"Account now exists in safe {prov_req['safe_name']}")

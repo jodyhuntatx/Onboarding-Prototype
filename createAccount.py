@@ -24,6 +24,9 @@ cybr_subdomain = prov_req["cybr_subdomain"]
 session_token = prov_req["session_token"]
 platform_id = prov_req["platform_id"]
 
+status_code = 201
+response_body = f"Account created successfully."
+
 # Construct account request from values in provisioning request
 acct_props = prov_req["values"]
 account_req = {
@@ -35,8 +38,19 @@ reqs_plat_props = platforms[platform_id]["required"]
 for key, val in acct_props.items():
     if key.upper() in reqs_plat_props:
         account_req[key] = acct_props[key]
-# hardcode these for now
-account_req["secretType"] = "password"
+
+# secret and username are optional, but are not platformAccountProperties
+secret = acct_props.get("secret",None)
+if secret is not None:
+    # hardcode password type for now - need to revisit for key type
+    account_req["secretType"] = "password"  
+    account_req["secret"] = secret
+    acct_props.pop("secret")
+username = acct_props.get("username",None)
+if username is not None:
+    account_req["username"] = username 
+    acct_props.pop("username")
+
 account_req["secretManagement"] = {
     "automaticManagementEnabled": True
 }
@@ -47,9 +61,6 @@ for key, val in acct_props.items():
         account_req["platformAccountProperties"][key] = acct_props[key]
 
 logging.debug(f"account_req: {account_req}")
-
-status_code = 201
-response_body = f"Account onboarded successfully."
 
 url = f"https://{cybr_subdomain}.privilegecloud.cyberark.cloud/passwordvault/api/accounts"
 payload = json.dumps(account_req)
@@ -66,6 +77,8 @@ if status_code != 201:
         response_body = "Account with that name already exists."
     else:
         response_body = "Invalid request format."
+        logging.debug(response_body)
+        logging.debug(response.text)
 
 logging.debug("================ createAccount() ================")
 logging.debug(f"\turl: {url}\n\tpayload: {payload}")
