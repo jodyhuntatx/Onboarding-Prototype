@@ -1,6 +1,0 @@
-INFO:root:safe_name: AWS-1234-TST-APR
-INFO:root:Successfully authenticated to CyberArk Privilege Cloud.
-INFO:root:Source store retrieved successfully
-INFO:root:Target store retrieved successfully
-INFO:root:Source store filter for store ID store-aeaa2dd3-7d99-47aa-9989-49f56f9f987f and safe AWS-1234-TST-APR retrieved successfully.
-INFO:root:Sync policy retrieved successfully
