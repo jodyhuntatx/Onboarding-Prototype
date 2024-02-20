@@ -1,6 +1,7 @@
 {
   "MySQL-ASM": {
     "id": "MySQL-ASM",
+    "systemtype": "Database",
     "searchpairs": {
       "platform": "aws",
       "type": "database",
@@ -26,6 +27,7 @@
   },
   "PostgreSQL-ASM": {
     "id": "PostgreSQL-ASM",
+    "systemtype": "Database",
     "searchpairs": {
       "platform": "aws",
       "type": "database",
@@ -49,6 +51,7 @@
   },
   "Sybase": {
     "id": "Sybase",
+    "systemtype": "Database",
     "searchpairs": {
       "platform": "onp",
       "type": "database",
@@ -68,6 +71,7 @@
   },
   "DB2SSH-ASM": {
     "id": "DB2SSH-ASM",
+    "systemtype": "Database",
     "searchpairs": {
       "platform": "aws",
       "type": "database",
@@ -89,6 +93,7 @@
   },
   "AuroraPostgresSQLRDS-ASM": {
     "id": "AuroraPostgresSQLRDS-ASM",
+    "systemtype": "Database",
     "searchpairs": {
       "platform": "aurora",
       "type": "database",
@@ -113,6 +118,7 @@
   },
   "Oracle-ASM": {
     "id": "Oracle-ASM",
+    "systemtype": "Database",
     "searchpairs": {
       "platform": "aws",
       "type": "database",
@@ -136,6 +142,7 @@
   },
   "InformixUnixSSH": {
     "id": "InformixUnixSSH",
+    "systemtype": "Database",
     "searchpairs": {},
     "required": [
       "USERNAME",
@@ -149,6 +156,7 @@
   },
   "Oracle-Dual": {
     "id": "Oracle-Dual",
+    "systemtype": "Database",
     "searchpairs": {},
     "required": [
       "USERNAME"
@@ -167,6 +175,7 @@
   },
   "MySQL": {
     "id": "MySQL",
+    "systemtype": "Database",
     "searchpairs": {
       "platform": "onp",
       "type": "database",
@@ -188,6 +197,7 @@
   },
   "DB2UnixSSH": {
     "id": "DB2UnixSSH",
+    "systemtype": "Database",
     "searchpairs": {},
     "required": [
       "USERNAME",
@@ -201,6 +211,7 @@
   },
   "MSSql-ASM": {
     "id": "MSSql-ASM",
+    "systemtype": "Database",
     "searchpairs": {
       "platform": "aws",
       "type": "database",
@@ -226,6 +237,7 @@
   },
   "MSSql": {
     "id": "MSSql",
+    "systemtype": "Database",
     "searchpairs": {
       "platform": "onp",
       "type": "database",
@@ -248,6 +260,7 @@
   },
   "MySQL-Dual": {
     "id": "MySQL-Dual",
+    "systemtype": "Database",
     "searchpairs": {
       "platform": "onp",
       "type": "database",
@@ -270,6 +283,7 @@
   },
   "SAPHANA": {
     "id": "SAPHANA",
+    "systemtype": "Database",
     "searchpairs": {},
     "required": [
       "USERNAME"
@@ -286,6 +300,7 @@
   },
   "MariaDB-ASM": {
     "id": "MariaDB-ASM",
+    "systemtype": "Database",
     "searchpairs": {
       "platform": "aws",
       "type": "database",
@@ -310,6 +325,7 @@
   },
   "Oracle": {
     "id": "Oracle",
+    "systemtype": "Database",
     "searchpairs": {
       "platform": "onp",
       "type": "database",
@@ -330,6 +346,7 @@
   },
   "AWSAccessKeys": {
     "id": "AWSAccessKeys",
+    "systemtype": "Amazon+web+services",
     "searchpairs": {
       "platform": "aws",
       "type": "Amazon web services",
@@ -351,6 +368,7 @@
   },
   "SH1": {
     "id": "SH1",
+    "systemtype": "Imported+Platforms",
     "searchpairs": {},
     "required": [
       "ADDRESS",
@@ -365,6 +383,7 @@
   },
   "City": {
     "id": "City",
+    "systemtype": "Imported+Platforms",
     "searchpairs": {},
     "required": [],
     "allkeys": [
@@ -373,6 +392,7 @@
   },
   "ThalesUser": {
     "id": "ThalesUser",
+    "systemtype": "Imported+Platforms",
     "searchpairs": {},
     "required": [
       "ADDRESS",
@@ -386,6 +406,7 @@
   },
   "testName": {
     "id": "testName",
+    "systemtype": "Imported+Platforms",
     "searchpairs": {},
     "required": [
       "DNS"
@@ -399,6 +420,7 @@
   },
   "BusinessWebsite": {
     "id": "BusinessWebsite",
+    "systemtype": "Website",
     "searchpairs": {},
     "required": [
       "ITEMNAME"
@@ -414,6 +436,7 @@
   },
   "RotationGroup-Default": {
     "id": "RotationGroup-Default",
+    "systemtype": "RotationGroup-Default",
     "searchpairs": {},
     "required": [],
     "allkeys": [
@@ -426,6 +449,7 @@
   },
   "SecretsHubPlatform": {
     "id": "SecretsHubPlatform",
+    "systemtype": "SecretsHub",
     "searchpairs": {},
     "required": [],
     "allkeys": [
@@ -435,6 +459,7 @@
   },
   "WinDesktopLocal": {
     "id": "WinDesktopLocal",
+    "systemtype": "Windows",
     "searchpairs": {},
     "required": [
       "ADDRESS",
@@ -451,6 +476,7 @@
   },
   "SFTP": {
     "id": "SFTP",
+    "systemtype": "*NIX",
     "searchpairs": {},
     "required": [],
     "allkeys": [
@@ -467,6 +493,7 @@
   },
   "WinDomain": {
     "id": "WinDomain",
+    "systemtype": "Windows",
     "searchpairs": {},
     "required": [
       "ADDRESS",
@@ -483,6 +510,7 @@
   },
   "MigrationPlatform": {
     "id": "MigrationPlatform",
+    "systemtype": "*NIX",
     "searchpairs": {},
     "required": [
       "ADDRESS",
@@ -497,6 +525,7 @@
   },
   "UnixSSHKeys": {
     "id": "UnixSSHKeys",
+    "systemtype": "*NIX",
     "searchpairs": {},
     "required": [
       "ADDRESS",
@@ -518,6 +547,7 @@
   },
   "WinServerLocal": {
     "id": "WinServerLocal",
+    "systemtype": "Windows",
     "searchpairs": {},
     "required": [
       "ADDRESS",
@@ -534,6 +564,7 @@
   },
   "UnixSSH": {
     "id": "UnixSSH",
+    "systemtype": "*NIX",
     "searchpairs": {},
     "required": [
       "ADDRESS",
@@ -548,6 +579,7 @@
   },
   "test": {
     "id": "test",
+    "systemtype": "Windows",
     "searchpairs": {},
     "required": [
       "ADDRESS",
@@ -564,6 +596,7 @@
   },
   "DemoApp": {
     "id": "DemoApp",
+    "systemtype": "*NIX",
     "searchpairs": {},
     "required": [
       "ADDRESS",
@@ -578,6 +611,7 @@
   },
   "CyberArkPTA": {
     "id": "CyberArkPTA",
+    "systemtype": "Application",
     "searchpairs": {},
     "required": [
       "ADDRESS",
@@ -593,6 +627,7 @@
   },
   "MyAPP": {
     "id": "MyAPP",
+    "systemtype": "Application",
     "searchpairs": {},
     "required": [
       "USERNAME",
@@ -609,6 +644,7 @@
   },
   "DummyPlatform": {
     "id": "DummyPlatform",
+    "systemtype": "Application",
     "searchpairs": {},
     "required": [
       "ADDRESS",
@@ -622,6 +658,7 @@
   },
   "RGroupTest": {
     "id": "RGroupTest",
+    "systemtype": "Misc",
     "searchpairs": {},
     "required": [],
     "allkeys": [
@@ -630,6 +667,7 @@
   },
   "CustomType01": {
     "id": "CustomType01",
+    "systemtype": "Misc",
     "searchpairs": {},
     "required": [],
     "allkeys": [
@@ -638,6 +676,7 @@
   },
   "SampleGroup": {
     "id": "SampleGroup",
+    "systemtype": "Misc",
     "searchpairs": {},
     "required": [],
     "allkeys": [

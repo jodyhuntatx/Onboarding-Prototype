@@ -1,3 +1,0 @@
-DEBUG:root:================ getSafeName() ================
-DEBUG:root:	status_code: 200
-	response: Safe name generated.

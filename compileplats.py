@@ -1,50 +1,34 @@
 #!/usr/local/bin/python3
 
-import subprocess
+# This is a utility that pulls info about active CyberArk platforms
+# and renders it into a json format for onboarding support. 
+
+# It takes an optional argument that names on older platform json file
+# from which to copy searchpair values, thereby relieving the user of 
+# manually re-entering them when recompiling the platforms.
+
+# Raw json output is sent to stdout for further redirection.
+# Therefore DO NOT USE print() if you're piping this output to jq!!
+
 import requests
 import json
 import sys
-import os
-
 import logging
+from cybronboard import getAuthnCreds, authnCyberark
+
 logfile = "./logs/compileplats.log"
 loglevel = logging.INFO
-logfmode = 'w'  # w = overwrite, a = append
+logfmode = 'w'  			# w = overwrite, a = append
+
+# MAIN ====================================================
 logging.basicConfig(filename=logfile, encoding='utf-8', level=loglevel, filemode=logfmode)
 
-#====================================================
-# Functions for calling python scripts as functions
-def marshal(dict):
-    return str(dict).replace(" ", "").replace("'", '"')
-
-def unmarshal(procout):
-    return json.loads(procout.stdout.decode().replace("'", '"'))
-
-def callFunction(funcName, input_dict, success_codes):
-  procout = subprocess.run([funcName, marshal(input_dict)], stdout=subprocess.PIPE)
-  resp_dict = unmarshal(procout)
-  logging.debug(f"{funcName}:\n\t\t{resp_dict}")
-  if resp_dict["status_code"] not in success_codes:
-    logging.error(f"Exiting due to error. See {funcName} logfile for details.")
-    sys.exit(0)
-  return resp_dict
-
-#====================================================
-# MAIN
-
-# Authenticate to CyberArk Identity
-admin_creds = {
-    "cybr_subdomain": os.environ.get("CYBR_SUBDOMAIN",None),
-    "cybr_username": os.environ.get("CYBR_USERNAME",None),
-    "cybr_password": os.environ.get("CYBR_PASSWORD",None),
-}
-# Validate all creds have a value, if not exit
-none_keys = [key for key, value in admin_creds.items() if value is None]
-if none_keys:
-  print("Missing one of CYBR_SUBDOMAIN, CYBR_USERNAME, CYBR_PASSWORD environment variables.")
-  sys.exit(-1)
-
-resp_dict = callFunction("./authnCyberArk.py", admin_creds, [200])
+# authenticate to CyberArk & add session token & subdomain to request
+logging.info("Authenticating...")
+admin_creds = getAuthnCreds()
+resp_dict = authnCyberark(admin_creds)
+errCheck(resp_dict)
+logging.info("Successfully authenticated.")
 session_token = resp_dict["session_token"]
 cybr_subdomain = admin_creds["cybr_subdomain"]
 
@@ -62,8 +46,9 @@ plats = plat_data["Platforms"]
 platsout = {}
 for p in plats:
   plat_id = p['general']['id']
-  platsout[plat_id] = {}
+  platsout[plat_id] = {}          # create dictionary entry named for platform ID
   platsout[plat_id]['id'] = plat_id
+  platsout[plat_id]['systemtype'] = p['general']['systemType'].replace(" ","+")
   platsout[plat_id]['searchpairs'] = {}
   platsout[plat_id]['required'] = []
   platsout[plat_id]['allkeys'] = ['SECRET']
@@ -74,5 +59,17 @@ for p in plats:
   for optl in p['properties']['optional']:
     prop_name = optl['name'].upper()
     platsout[plat_id]['allkeys'].append(prop_name)
+
+# if filename of old platform listing provided, copy search_pairs into new
+if len(sys.argv) > 1:
+  old_platfile = sys.argv[1]
+  with open(old_platfile) as f_in:
+    old_plats = json.load(f_in)
+  newplatsout = platsout.copy() # avoids changing dictionary while iterating
+  for plat_id in platsout:
+    old_plat = old_plats.get(plat_id,None)
+    if old_plat is not None:
+      newplatsout[plat_id]['searchpairs'] = old_plat['searchpairs']
+  platsout = newplatsout
+
 print(json.dumps(platsout))
-  

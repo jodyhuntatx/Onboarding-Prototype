@@ -1,8 +1,3 @@
-variable "secret_id" {
-  type        = string
-  description = "The name of the secret in AWS Secrets Manager."
-}
-
 ###############################
 terraform {
   required_providers {
@@ -13,28 +8,21 @@ terraform {
   }
   required_version = ">= 1.2.0"
 }
-
-provider "aws" {
-  region = "us-east-1"
-}
-
 #################################
 # Resources
 
-# aws_secretsmanager_secret: ASM Secret Name & tags
-
-resource "aws_secretsmanager_secret" "cybr_secret" {
-  name                    = var.secret_id
-  description             = "example secret"
-  recovery_window_in_days = 0
-  tags = {
-    "Sourced by CyberArk" = ""
-    "CyberArk Safe"       = "JodyOnboard"
-  }
+locals {
+    asset_csv = csvdecode(file("${path.module}/${var.csv_file_path}"))
 }
+
+# ### Resource example for bulk import ###
+resource "dsfhub_data_source" "bulk-database-import" {
+
 
 # should be from template
 variable "rds_secret" {
+    for_each = { for asset in local.asset_csv : asset.asset_id => asset }
+    server_type = each.value["Server Type"]
   default = {
     address              = "rdsaddress"
     username             = "rdsuser"
@@ -47,12 +35,6 @@ variable "rds_secret" {
   }
 
   type = map(string)
-}
-
-# asm_secret_version: ASM Secret Value
-resource "aws_secretsmanager_secret_version" "cybr" {
-  secret_id     = aws_secretsmanager_secret.cybr_secret.id
-  secret_string = jsonencode(var.rds_secret)
 }
 
 # standin resource for CyberArk Account
