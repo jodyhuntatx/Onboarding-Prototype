@@ -16,7 +16,7 @@ import logging
 
 def getSafeName(prov_req):
 
-  with open("safenamerules.json") as sr:
+  with open("./json/safenamerules.json") as sr:
       saferules = json.load(sr)
 
   # MAIN ========================================================

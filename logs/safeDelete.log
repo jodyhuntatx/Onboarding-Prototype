@@ -1,0 +1,20 @@
+DEBUG:root:================ getSafeName() ================
+DEBUG:root:	status_code: 200
+	response: Safe name generated.
+INFO:root:safe_name: AWS-ACCD-1234-TST-APR
+DEBUG:root:================ getAuthnCreds() ================
+DEBUG:root:Authentication credentials retrieved.
+DEBUG:root:================ authnCyberark() ================
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): cybr-secrets.cyberark.cloud:443
+DEBUG:urllib3.connectionpool:https://cybr-secrets.cyberark.cloud:443 "POST /api/idadmin/oauth2/platformtoken HTTP/1.1" 200 None
+DEBUG:root:	url: https://cybr-secrets.cyberark.cloud/api/idadmin/oauth2/platformtoken
+	status_code: 200
+	response: Successfully authenticated to CyberArk Privilege Cloud.
+INFO:root:Successfully authenticated.
+DEBUG:root:================ deleteSafe() ================
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): cybr-secrets.privilegecloud.cyberark.cloud:443
+DEBUG:urllib3.connectionpool:https://cybr-secrets.privilegecloud.cyberark.cloud:443 "DELETE /passwordvault/api/safes/AWS-ACCD-1234-TST-APR HTTP/1.1" 204 0
+DEBUG:root:================ deleteSafe() ================
+DEBUG:root:status_code: 204
+	response: Safe AWS-ACCD-1234-TST-APR deleted successfully.
+INFO:root:safe_name: AWS-ACCD-1234-TST-APR no longer exists.

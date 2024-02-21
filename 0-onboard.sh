@@ -1,7 +1,8 @@
 #!/bin/bash
+pushd bin
 ./package.sh
+popd
 export PYTHONPATH=$PYTHONPATH:./lib
-clear
 rm logs/*
 
 ./safeCreate.py ./requests/safereq.json

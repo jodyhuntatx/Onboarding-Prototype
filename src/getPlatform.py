@@ -7,7 +7,7 @@ import logging
 
 # ====================================================
 # Constant - also referenced in createAccount.py
-PLATFORM_FILE = "./platforms.json"  # file with platform mapping k/v pairs
+PLATFORM_FILE = "./json/platforms.json"  # file with platform mapping k/v pairs
 
 # ====================================================
 # Finds first platform where platform's searchpair values all match the provisioning request's

@@ -217,8 +217,8 @@ import logging
 def createAccount(prov_req):
     logging.debug("================ createAccount() ================")
 
-    # ensure provisioning request has account_values, if not exit w/ error
-    if prov_req.get("account_values",None) is None:
+    # ensure provisioning request has accountValues, if not exit w/ error
+    if prov_req.get("accountValues",None) is None:
         err_msg = "Provisioning request does not contain account values. Unable to create account."
         logging.error(err_msg)
         return_dict = {}
@@ -249,8 +249,8 @@ def createAccount(prov_req):
     response_body = f"Account created successfully."
 
     # Construct account request from values in provisioning request
-    acct_props = prov_req["account_values"]
-    logging.debug("account_values:",acct_props)
+    acct_props = prov_req["accountValues"]
+    logging.debug("accountValues:",acct_props)
 
     # Construct account name per vault naming algorithm
     acct_name = platforms[platform_id]["systemtype"]
@@ -317,6 +317,7 @@ def createAccount(prov_req):
     return_dict["status_code"] = status_code
     return_dict["response_body"] = response_body
     return return_dict
+
 #############################################################################
 #############################################################################
 # createSafe(prov_req)
@@ -526,7 +527,7 @@ import logging
 
 # ====================================================
 # Constant - also referenced in createAccount.py
-PLATFORM_FILE = "./platforms.json"  # file with platform mapping k/v pairs
+PLATFORM_FILE = "./json/platforms.json"  # file with platform mapping k/v pairs
 
 # ====================================================
 # Finds first platform where platform's searchpair values all match the provisioning request's
@@ -537,8 +538,8 @@ PLATFORM_FILE = "./platforms.json"  # file with platform mapping k/v pairs
 def getPlatform(prov_req):
     logging.debug("================ getPlatformId() ================")
 
-    # ensure provisioning request has account_values, if not exit w/ error
-    if prov_req.get("account_values", None) is None:
+    # ensure provisioning request has accountValues, if not exit w/ error
+    if prov_req.get("accountValues", None) is None:
         err_msg = "Provisioning request does not contain account values. Unable to determine platform."
         logging.error(err_msg)
         return_dict = {}
@@ -596,7 +597,7 @@ def getPlatform(prov_req):
         valid_request = False
 
         # get list of uppercase request onboarding keys to compare with platform properties
-        prov_list = prov_req["account_values"].keys()
+        prov_list = prov_req["accountValues"].keys()
         prov_keys = [k.upper() for k in prov_list]
         # first ensure all request properties are in platform keys
         logging.debug(f"prov_keys: type: {type(prov_keys)} vals: {prov_keys}")
@@ -974,7 +975,7 @@ import logging
 
 def getSafeName(prov_req):
 
-  with open("safenamerules.json") as sr:
+  with open("./json/safenamerules.json") as sr:
       saferules = json.load(sr)
 
   # MAIN ========================================================
