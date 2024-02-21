@@ -4,8 +4,8 @@ export PYTHONPATH=$PYTHONPATH:./lib
 clear
 rm logs/*
 
-./safeCreate.py safereq.json
+./safeCreate.py ./requests/safereq.json
 if [ $? -ne 0 ]; then exit; fi 
-./acctCreate.py acctreq.json
+./addSHinfra.py ./requests/safereq.json
 if [ $? -ne 0 ]; then exit; fi 
-./testSHfunctions.py safereq.json
+./acctCreate.py ./requests/acctreq.json

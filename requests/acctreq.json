@@ -1,12 +1,12 @@
 {
     "billcode": "1234",
     "env": "test",
-    "project": "onbtst",
+    "project": "accdemo",
     "platform": "aws",
     "apprReqd": "True",
     "type": "database",
     "subtype": "mysql",
-    "account_values": {
+    "accountValues": {
         "address": "rdsaddress",
         "username": "rdsuser",
         "secret": "rdspassword",

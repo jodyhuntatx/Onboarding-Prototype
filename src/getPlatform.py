@@ -18,8 +18,8 @@ PLATFORM_FILE = "./platforms.json"  # file with platform mapping k/v pairs
 def getPlatform(prov_req):
     logging.debug("================ getPlatformId() ================")
 
-    # ensure provisioning request has account_values, if not exit w/ error
-    if prov_req.get("account_values", None) is None:
+    # ensure provisioning request has accountValues, if not exit w/ error
+    if prov_req.get("accountValues", None) is None:
         err_msg = "Provisioning request does not contain account values. Unable to determine platform."
         logging.error(err_msg)
         return_dict = {}
@@ -77,7 +77,7 @@ def getPlatform(prov_req):
         valid_request = False
 
         # get list of uppercase request onboarding keys to compare with platform properties
-        prov_list = prov_req["account_values"].keys()
+        prov_list = prov_req["accountValues"].keys()
         prov_keys = [k.upper() for k in prov_list]
         # first ensure all request properties are in platform keys
         logging.debug(f"prov_keys: type: {type(prov_keys)} vals: {prov_keys}")

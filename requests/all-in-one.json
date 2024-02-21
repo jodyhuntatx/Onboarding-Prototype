@@ -1,0 +1,31 @@
+{
+    "billcode": 1234,
+    "project": "accdemo",
+    "env": "test",
+    "platform": "aws",
+    "apprReqd": "True",
+    "safeAdmins": [
+        "jody_hunt@cyberark.cloud.3357"
+    ],
+    "safeFullUsers": [
+        "evan_litwak@cyberark.cloud.3357",
+        "david_hisel@cyberark.cloud.3357"
+    ],
+    "syncMembers": [
+        "SecretsHub",
+        "Conjur Sync"
+    ],
+    "cloudAccount": "475601244925",
+    "cloudRegion": "us-east-1",
+    "type": "database",
+    "subtype": "mysql",
+    "accountValues": {
+        "address": "rdsaddress",
+        "username": "rdsuser",
+        "secret": "rdspassword",
+        "engine": "postgres",
+        "host": "foo.bar.baz",
+        "port": "5432",
+        "dbInstanceIdentifier": "cluster2"
+    }
+}

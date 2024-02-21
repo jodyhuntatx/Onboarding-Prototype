@@ -1,20 +1,23 @@
 #!/usr/local/bin/python3
 
-# This is a utility that pulls info about active CyberArk platforms
-# and renders it into a json format for onboarding support. 
+'''
+ This is a utility that pulls info about active CyberArk platforms
+ and renders it into a json format for onboarding support. 
 
-# It takes an optional argument that names on older platform json file
-# from which to copy searchpair values, thereby relieving the user of 
-# manually re-entering them when recompiling the platforms.
+ It takes an optional argument that names on older platform json file
+ from which to copy searchpair values, thereby relieving the user of 
+ manually re-entering them when recompiling the platforms.
 
-# Raw json output is sent to stdout for further redirection.
-# Therefore DO NOT USE print() if you're piping this output to jq!!
+ Raw json output is sent to stdout for further redirection to jq or file.
+ Therefore DO NOT ADD PRINT STATEMENTS if you're piping this output to jq!!
+ Use logging.info(msgs) instead.
+'''
 
 import requests
 import json
 import sys
 import logging
-from cybronboard import getAuthnCreds, authnCyberark
+from cybronboard import *
 
 logfile = "./logs/compileplats.log"
 loglevel = logging.INFO

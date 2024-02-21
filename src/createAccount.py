@@ -10,8 +10,8 @@ import logging
 def createAccount(prov_req):
     logging.debug("================ createAccount() ================")
 
-    # ensure provisioning request has account_values, if not exit w/ error
-    if prov_req.get("account_values",None) is None:
+    # ensure provisioning request has accountValues, if not exit w/ error
+    if prov_req.get("accountValues",None) is None:
         err_msg = "Provisioning request does not contain account values. Unable to create account."
         logging.error(err_msg)
         return_dict = {}
@@ -42,8 +42,8 @@ def createAccount(prov_req):
     response_body = f"Account created successfully."
 
     # Construct account request from values in provisioning request
-    acct_props = prov_req["account_values"]
-    logging.debug("account_values:",acct_props)
+    acct_props = prov_req["accountValues"]
+    logging.debug("accountValues:",acct_props)
 
     # Construct account name per vault naming algorithm
     acct_name = platforms[platform_id]["systemtype"]
