@@ -1,5 +1,6 @@
 {
     "billcode": 1234,
+    "project": "onbtst",
     "env": "test",
     "platform": "aws",
     "apprReqd": "True",

@@ -1,0 +1,102 @@
+[
+    {
+        "keyname": "platform",
+        "maptype": "valuemap",
+        "valuemap": [
+            {
+                "inputs": [
+                    "AWS",
+                    "AMAZON WEB SERVICES"
+                ],
+                "output": "AWS"
+            },
+            {
+                "inputs": [
+                    "AZR",
+                    "AZURE"
+                ],
+                "output": "AZR"
+            },
+            {
+                "inputs": [
+                    "GCP",
+                    "GOOGLE CLOUD PLATFORM"
+                ],
+                "output": "GCP"
+            },
+            {
+                "inputs": [
+                    "DC1",
+                    "DATACENTER 1"
+                ],
+                "output": "DC1"
+            }
+        ]
+    },
+    {
+        "keyname": "project",
+        "maptype": "substring",
+        "substring": {
+            "start": 0,
+            "end": 4
+        }
+    },
+    {
+        "keyname": "billcode",
+        "maptype": "literal"
+    },
+    {
+        "keyname": "env",
+        "maptype": "valuemap",
+        "valuemap": [
+            {
+                "inputs": [
+                    "DEV",
+                    "DEVELOPMENT"
+                ],
+                "output": "DEV"
+            },
+            {
+                "inputs": [
+                    "TST",
+                    "TEST"
+                ],
+                "output": "TST"
+            },
+            {
+                "inputs": [
+                    "UAT",
+                    "ACCEPTANCE"
+                ],
+                "output": "UAT"
+            },
+            {
+                "inputs": [
+                    "PRD",
+                    "PRODUCTION"
+                ],
+                "output": "PRD"
+            }
+        ]
+    },
+    {
+        "keyname": "apprReqd",
+        "maptype": "valuemap",
+        "valuemap": [
+            {
+                "inputs": [
+                    "T",
+                    "TRUE"
+                ],
+                "output": "APR"
+            },
+            {
+                "inputs": [
+                    "F",
+                    "FALSE"
+                ],
+                "output": "NAP"
+            }
+        ]
+    }
+]
