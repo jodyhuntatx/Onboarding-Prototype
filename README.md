@@ -4,4 +4,8 @@ This is a collection of python functions to create CyberArk safes, accounts and 
 
 The design intention is support the wide variety of workflow requirements encountered at customer sites. Therefore, it does not prescribe a rigid format for provisioning requests. It also does not require the request to contain a safe name or platform ID. Those are derived from information in the request and are easily adapted to customer naming conventions.
 
-![json slides](https://github.com/jodyhuntatx/Onboarding-Prototype/blob/main/img/onboard-json-explainer.png?raw=true)
+![safe-request](https://github.com/jodyhuntatx/Onboarding-Prototype/blob/main/img/safe-request.png?raw=true)
+![acct-request](https://github.com/jodyhuntatx/Onboarding-Prototype/blob/main/img/acct-request.png?raw=true)
+![platforms](https://github.com/jodyhuntatx/Onboarding-Prototype/blob/main/img/platforms.png?raw=true)
+![safenamerules](https://github.com/jodyhuntatx/Onboarding-Prototype/blob/main/img/safenamerules.png?raw=true)
+![all-in-one](https://github.com/jodyhuntatx/Onboarding-Prototype/blob/main/img/all-in-one.png?raw=true)
