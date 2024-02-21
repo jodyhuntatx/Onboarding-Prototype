@@ -1,9 +1,0 @@
-INFO:root:safe_name: AWS-ACCD-1234-TST-APR
-INFO:root:Successfully authenticated.
-INFO:root:safe_name: AWS-ACCD-1234-TST-APR was created or already exists.
-INFO:root:jody_hunt@cyberark.cloud.3357 added to safe AWS-ACCD-1234-TST-APR
-INFO:root:evan_litwak@cyberark.cloud.3357 added to safe AWS-ACCD-1234-TST-APR
-INFO:root:david_hisel@cyberark.cloud.3357 added to safe AWS-ACCD-1234-TST-APR
-INFO:root:SecretsHub added to safe AWS-ACCD-1234-TST-APR
-INFO:root:Conjur Sync added to safe AWS-ACCD-1234-TST-APR
-INFO:root:['jody_hunt@cyberark.cloud.3357'], ['evan_litwak@cyberark.cloud.3357', 'david_hisel@cyberark.cloud.3357'] and ['SecretsHub', 'Conjur Sync'] are members of safe AWS-ACCD-1234-TST-APR
