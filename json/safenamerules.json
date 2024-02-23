@@ -27,6 +27,9 @@
             {
                 "inputs": [
                     "DC1",
+                    "ONP",
+                    "ONPREM",
+                    "ON-PREM",
                     "DATACENTER 1"
                 ],
                 "output": "DC1"

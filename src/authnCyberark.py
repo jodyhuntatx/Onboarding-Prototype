@@ -21,11 +21,16 @@ def authnCyberark(admin_creds):
         return urllib.parse.quote(s)
     # -------------------------------------------
 
-    # Validate all creds have a value, if not exit
-    none_keys = [key for key, value in admin_creds.items() if value is None]
-    if none_keys:
-        print("Missing one of cybr_subdomain, cybr_username, cybr_password in admin_creds dictionary.")
-        sys.exit(-1)
+    # first ensure we have required request values
+    required_keys = ["cybr_subdomain","cybr_username","cybr_password"]
+    for rkey in required_keys:
+        input_val = admin_creds.get(rkey, None)
+        if input_val is None:
+            err_msg = f"Admin creds is missing key required for authentication: {rkey}"
+            logging.error(err_msg)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = err_msg
   
     cybr_subdomain = admin_creds["cybr_subdomain"]
     cybr_username = admin_creds["cybr_username"]

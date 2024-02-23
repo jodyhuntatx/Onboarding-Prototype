@@ -3,7 +3,6 @@
 # getSHTargetStoreId.py
 
 import json
-import sys
 import requests
 import logging
 
@@ -14,18 +13,26 @@ import logging
 def getSHTargetStoreId(prov_req):
     logging.debug("================ getSHTargetStoreId() ================")
 
-    required_vals = []
-    required_vals.append(prov_req.get("cloudAccount",None))
-    required_vals.append(prov_req.get("cloudRegion",None))
-    none_keys = [val for val in required_vals if val is None]
-    if none_keys:
-        err_msg = "Missing one of cloudAccount or cloudRegion in provisioning request."
-        print(err_msg)
-        logging.error(err_msg)
-        sys.exit(-1)
+    # first ensure we have required request values
+    required_keys = [
+        "cybr_subdomain",
+        "session_token",
+        "cloudAccount",
+        "cloudRegion"
+    ]
+    for rkey in required_keys:
+        input_val = prov_req.get(rkey, None)
+        if input_val is None:
+            response_body = f"Request is missing key required for Secrets Hub target store retrieval: {rkey}"
+            logging.error(response_body)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = response_body
 
     cybr_subdomain = prov_req["cybr_subdomain"]
     session_token = prov_req["session_token"]
+    account_id = str(prov_req["cloudAccount"])     # str() needed in case acct# is not quoted
+    region_id = prov_req["cloudRegion"]
 
     tstore_id = ""
     status_code = 200
@@ -49,8 +56,6 @@ def getSHTargetStoreId(prov_req):
         allAwsTargets = [t for t in stores_dict["secretStores"] if isAwsTarget(t)]
         logging.debug(f"allAwsTargets: {allAwsTargets}")
 
-        account_id = str(prov_req["cloudAccount"])     # needed in case acct# is not quoted
-        region_id = prov_req["cloudRegion"]
         isTheTarget = lambda x: (
             (x["data"]["accountId"] == account_id)
             & (x["data"]["regionId"] == region_id)

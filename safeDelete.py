@@ -30,18 +30,19 @@ errCheck(resp_dict)
 logging.info(f"safe_name: {resp_dict['safe_name']}")
 prov_req["safe_name"] = resp_dict["safe_name"]
 
-# authenticate to CyberArk & add session token & subdomain to request
+print("Getting admin creds...")
+resp_dict = getAuthnCreds()
+errCheck(resp_dict)
+admin_creds = resp_dict["admin_creds"]
+
 print("Authenticating...")
-admin_creds = getAuthnCreds()
 resp_dict = authnCyberark(admin_creds)
 errCheck(resp_dict)
 logging.info("Successfully authenticated.")
 prov_req["session_token"] = resp_dict["session_token"]
 prov_req["cybr_subdomain"] = admin_creds["cybr_subdomain"]
 
-
-# Delete safe
-print(f"Deleting safe...")
+print("Deleting safe...")
 resp_dict = deleteSafe(prov_req)
 errCheck(resp_dict, expected=[204])
 logging.info(f"safe_name: {prov_req['safe_name']} no longer exists.")

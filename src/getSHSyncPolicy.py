@@ -26,7 +26,7 @@ def getSHSyncPolicy(prov_req):
         payload = json.dumps(
             {
                 "name": "ASM policy",
-                "description": "Auto-created by onboarding lambda",
+                "description": "Auto-created by onboarding automation",
                 "source": {"id": sstore_id},
                 "target": {"id": tstore_id},
                 "filter": {"id": filter_id},
@@ -52,6 +52,22 @@ def getSHSyncPolicy(prov_req):
         return policy_id, status_code, response_body
 
     # MAIN ====================================================
+    # first ensure we have required request values
+    required_keys = [
+        "cybr_subdomain",
+        "session_token",
+        "source_store_id",
+        "target_store_id",
+        "filter_id",
+    ]
+    for rkey in required_keys:
+        input_val = prov_req.get(rkey, None)
+        if input_val is None:
+            response_body = f"Request is missing key required for Secrets Hub sync policy retrieval/creation: {rkey}"
+            logging.error(response_body)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = response_body
 
     cybr_subdomain = prov_req["cybr_subdomain"]
     session_token = prov_req["session_token"]
@@ -73,10 +89,9 @@ def getSHSyncPolicy(prov_req):
     if status_code == 200:
         policies_dict = json.loads(response.text)
         isPolicy = lambda x: (
-            (x["state"]["current"] == "ENABLED")
-            & (x["source"]["id"] == sstore_id)
+            ((x["source"]["id"] == sstore_id)
             & (x["target"]["id"] == tstore_id)
-            & (x["filter"]["id"] == filter_id)
+            & (x["filter"]["id"] == filter_id))
         )
         foundPolicy = [a for a in policies_dict["policies"] if isPolicy(a)]
         if len(foundPolicy) == 0:  # policy not found - create it
@@ -85,9 +100,14 @@ def getSHSyncPolicy(prov_req):
             )
         elif len(foundPolicy) > 1:
             status_code = 300
-            response_body = "More than one sync policy found for source ID {sstore_id}, filter ID {filter_id}, target ID {tstore_id}."
-        else:
+            response_body = f"More than one sync policy found for source ID {sstore_id}, filter ID {filter_id}, target ID {tstore_id}."
             policy_id = foundPolicy.pop()["id"]
+        else:
+            policy = foundPolicy.pop()
+            policy_id = policy["id"]
+            if policy["state"]["current"] != "ENABLED":
+                status_code = 409
+                response_body = f"Policy ID {policy_id} is not currently enabled."
     else:
         response_body = response.text
 

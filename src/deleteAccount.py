@@ -4,7 +4,6 @@
 # deleteAccount.py
 
 import json
-import sys
 import requests
 import logging
 
@@ -16,6 +15,17 @@ def deleteAccount(prov_req):
     return_dict["status_code"] = 400
     return_dict["response_body"] = response_body
     return return_dict
+
+    # first ensure we have required request values
+    required_keys = ["cybr_subdomain", "session_token", "safe_name"]
+    for rkey in required_keys:
+        input_val = prov_req.get(rkey, None)
+        if input_val is None:
+            err_msg = f"Request is missing key required for account deletion: {rkey}"
+            logging.error(err_msg)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = err_msg
 
     # Extract HTTPS values
     cybr_subdomain = prov_req["cybr_subdomain"]

@@ -1,12 +1,12 @@
 {
-    "billcode": 1234,
-    "project": "accdemo",
+    "billcode": 240222,
+    "project": "feb22test",
     "env": "test",
     "platform": "aws",
     "apprReqd": "True",
     "safeAdmins": ["jody_hunt@cyberark.cloud.3357"],
     "safeFullUsers": ["evan_litwak@cyberark.cloud.3357","david_hisel@cyberark.cloud.3357"],
     "syncMembers": ["SecretsHub","Conjur Sync"],
-    "cloudAccount": "475601244925",
+    "cloudAccount": 475601244925,
     "cloudRegion": "us-east-1"
 }

@@ -14,6 +14,17 @@ import logging
 def getSHSourceStoreId(prov_req):
     logging.debug("================ getSHSourceStoreId() ================")
 
+    # first ensure we have required request values
+    required_keys = ["cybr_subdomain", "session_token"]
+    for rkey in required_keys:
+        input_val = prov_req.get(rkey, None)
+        if input_val is None:
+            response_body = f"Request is missing key required for Secrets Hub source store ID retrieval: {rkey}"
+            logging.error(response_body)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = response_body
+
     cybr_subdomain = prov_req["cybr_subdomain"]
     session_token = prov_req["session_token"]
 
@@ -30,8 +41,8 @@ def getSHSourceStoreId(prov_req):
     status_code = response.status_code
     if status_code == 200:
         stores_dict = json.loads(response.text)
-        isSource = lambda x: "SECRETS_SOURCE" in x["behaviors"]
-        foundSource = [a for a in stores_dict["secretStores"] if isSource(a)]
+        isSource = lambda store: "SECRETS_SOURCE" in store["behaviors"]
+        foundSource = [store for store in stores_dict["secretStores"] if isSource(store)]
         if len(foundSource) == 0:
             status_code = 403
             response_body = "No secret source found."
