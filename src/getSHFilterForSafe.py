@@ -17,7 +17,8 @@ def getSHFilterForSafe(prov_req):
     logging.debug("================ getSHFilterForSafe() ================")
 
     # -------------------------------------------
-    def createSHFilterForSafe(prov_req):
+    # NOTE: cybr_subdomain, source_store_id, safe_name are global vars to this function
+    def createSHFilterForSafe():
         logging.debug("================ createSHFilterForSafe() ================")
         filter_id = ""
         url = f"https://{cybr_subdomain}.secretshub.cyberark.cloud/api/secret-stores/{source_store_id}/filters"
@@ -44,6 +45,16 @@ def getSHFilterForSafe(prov_req):
         return filter_id, status_code, response_body
 
     # -------------------------------------------
+    # first ensure we have required request values
+    required_keys = ["cybr_subdomain", "session_token", "safe_name", "source_store_id"]
+    for rkey in required_keys:
+        input_val = prov_req.get(rkey, None)
+        if input_val is None:
+            response_body = f"Request is missing key required for Secrets Hub filter retrieval/creation: {rkey}"
+            logging.error(response_body)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = response_body
 
     cybr_subdomain = prov_req["cybr_subdomain"]
     session_token = prov_req["session_token"]
@@ -70,13 +81,12 @@ def getSHFilterForSafe(prov_req):
         )
         foundFilter = [a for a in filters_dict["filters"] if isFilter(a)]
         if len(foundFilter) == 0:  # filter does not exist - create it
-            filter_id, status_code, response_body = createSHFilterForSafe(prov_req)
+            filter_id, status_code, response_body = createSHFilterForSafe()
         elif len(foundFilter) == 1:  # filter already exists - use it
             filter_id = foundFilter.pop()["id"]
-        else:  # more than one filter exists - ambiguous
+        else:  # more than one filter exists - ambiguous - should not happen
             status_code = 300
             response_body = f"More than one filter already exists for store ID {source_store_id} and safe {safe_name}."
-
     else:
         response_body = response.text
 

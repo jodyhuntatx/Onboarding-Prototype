@@ -15,6 +15,8 @@ import logging
 
 def getAuthnCreds():
     logging.debug("================ getAuthnCreds() ================")
+    status_code = 200
+    response_body = "Authentication credentials retrieved."
     admin_creds = {
         "cybr_subdomain": os.environ.get("CYBR_SUBDOMAIN",None),
         "cybr_username": os.environ.get("CYBR_USERNAME",None),
@@ -23,9 +25,13 @@ def getAuthnCreds():
     # Validate all creds have a value, if not exit with error code
     none_keys = [key for key, value in admin_creds.items() if value is None]
     if none_keys:
-        print("Missing one of CYBR_SUBDOMAIN, CYBR_USERNAME, CYBR_PASSWORD in environment variables.")
-        sys.exit(-1)
+        status_code = 400
+        response_body = "Missing one of CYBR_SUBDOMAIN, CYBR_USERNAME, CYBR_PASSWORD in environment variables."
 
-    logging.debug("Authentication credentials retrieved.")
+    logging.info(response_body)
 
-    return admin_creds
+    return_dict = {}
+    return_dict["status_code"] = status_code
+    return_dict["response_body"] = response_body
+    return_dict["admin_creds"] = admin_creds
+    return return_dict

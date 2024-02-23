@@ -1,4 +1,3 @@
-
 #############################################################################
 #############################################################################
 # createSafe(prov_req)
@@ -7,11 +6,28 @@ import json
 import requests
 import logging
 
+
 def createSafe(prov_req):
     logging.debug("================ createSafe() ================")
+
+    # first ensure we have required request values
+    required_keys = ["cybr_subdomain", "session_token", "safe_name"]
+    for rkey in required_keys:
+        input_val = prov_req.get(rkey, None)
+        if input_val is None:
+            err_msg = f"Request is missing key required for safe creation: {rkey}"
+            logging.error(err_msg)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = err_msg
+
     cybr_subdomain = prov_req["cybr_subdomain"]
     session_token = prov_req["session_token"]
     safe_name = prov_req["safe_name"]
+
+    status_code = 201
+    response_body = f"Safe {safe_name} created successfully."
+
     safe_req = {
         "safeName": safe_name,
         "description": "Created by CybrOnboarding engine.",
@@ -19,10 +35,6 @@ def createSafe(prov_req):
         "managingCPM": "",
         "numberOfDaysRetention": 0,
     }
-
-    status_code = 201
-    response_body = f"Safe {safe_name} created successfully."
-
     url = f"https://{cybr_subdomain}.privilegecloud.cyberark.cloud/passwordvault/api/safes"
     payload = json.dumps(safe_req)
     headers = {

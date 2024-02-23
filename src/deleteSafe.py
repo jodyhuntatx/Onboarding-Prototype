@@ -10,6 +10,18 @@ import logging
 
 def deleteSafe(prov_req):
     logging.debug("================ deleteSafe() ================")
+
+    # first ensure we have required request values
+    required_keys = ["cybr_subdomain", "session_token", "safe_name"]
+    for rkey in required_keys:
+        input_val = prov_req.get(rkey, None)
+        if input_val is None:
+            err_msg = f"Request is missing key required for safe deletion: {rkey}"
+            logging.error(err_msg)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = err_msg
+
     cybr_subdomain = prov_req["cybr_subdomain"]
     session_token = prov_req["session_token"]
     safe_name = prov_req["safe_name"]

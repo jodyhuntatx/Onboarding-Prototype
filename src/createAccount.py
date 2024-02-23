@@ -17,7 +17,7 @@ def createAccount(prov_req):
         return_dict = {}
         return_dict["status_code"] = 400
         return_dict["response_body"] = err_msg
-        print(return_dict)
+        return return_dict
 
     # load platform dictionary from json file created with compileplats.py
     # PLATFORM_FILE is a constant defined in getPlatform.py

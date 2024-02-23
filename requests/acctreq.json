@@ -1,11 +1,11 @@
 {
-    "billcode": "1234",
+    "billcode": 240222,
+    "project": "feb22test",
     "env": "test",
-    "project": "accdemo",
     "platform": "aws",
     "apprReqd": "True",
     "type": "database",
-    "subtype": "mysql",
+    "subtype": "postgres",
     "accountValues": {
         "address": "rdsaddress",
         "username": "rdsuser",

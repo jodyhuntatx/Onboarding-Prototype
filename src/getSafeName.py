@@ -20,18 +20,14 @@ def getSafeName(prov_req):
   response_body = "Safe name generated."
   safe_name = ""
 
-  # names of request keys in rules from which to compose safe name
-  input_keys = [ r["keyname"] for r in saferules ]
-  input_vals = []
-
   # first ensure we have request values required for rules
-  for idx in range(len(input_keys)):
-    input_val = prov_req.get(input_keys[idx],None)
-    if input_val is not None:
-      input_vals.append(input_val)
-    else:
+  # get names of request keys in rules from which to compose safe name
+  required_keys = [ r["keyname"] for r in saferules ]
+  for idx in range(len(required_keys)):
+    input_val = prov_req.get(required_keys[idx],None)
+    if input_val is None:
       status_code = 400
-      err_msg = f"Missing key required for safe naming: {input_keys[idx]}"
+      err_msg = f"Missing key required for safe naming: {required_keys[idx]}"
       logging.error(err_msg)
       response_body = err_msg
 

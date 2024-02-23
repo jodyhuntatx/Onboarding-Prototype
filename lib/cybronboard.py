@@ -105,6 +105,17 @@ def addSafeMembers(prov_req):
     # MAIN ====================================================
     logging.debug("================ addSafeMembers() ================")
 
+    # first ensure we have required request values
+    required_keys = ["cybr_subdomain","session_token","safe_name"]
+    for rkey in required_keys:
+        input_val = prov_req.get(rkey, None)
+        if input_val is None:
+            err_msg = f"Request is missing key required for adding safe members: {rkey}"
+            logging.error(err_msg)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = err_msg
+
     cybr_subdomain = prov_req["cybr_subdomain"]
     session_token = prov_req["session_token"]
     safe_name = prov_req["safe_name"]
@@ -159,11 +170,16 @@ def authnCyberark(admin_creds):
         return urllib.parse.quote(s)
     # -------------------------------------------
 
-    # Validate all creds have a value, if not exit
-    none_keys = [key for key, value in admin_creds.items() if value is None]
-    if none_keys:
-        print("Missing one of cybr_subdomain, cybr_username, cybr_password in admin_creds dictionary.")
-        sys.exit(-1)
+    # first ensure we have required request values
+    required_keys = ["cybr_subdomain","cybr_username","cybr_password"]
+    for rkey in required_keys:
+        input_val = admin_creds.get(rkey, None)
+        if input_val is None:
+            err_msg = f"Admin creds is missing key required for authentication: {rkey}"
+            logging.error(err_msg)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = err_msg
   
     cybr_subdomain = admin_creds["cybr_subdomain"]
     cybr_username = admin_creds["cybr_username"]
@@ -224,7 +240,7 @@ def createAccount(prov_req):
         return_dict = {}
         return_dict["status_code"] = 400
         return_dict["response_body"] = err_msg
-        print(return_dict)
+        return return_dict
 
     # load platform dictionary from json file created with compileplats.py
     # PLATFORM_FILE is a constant defined in getPlatform.py
@@ -317,7 +333,6 @@ def createAccount(prov_req):
     return_dict["status_code"] = status_code
     return_dict["response_body"] = response_body
     return return_dict
-
 #############################################################################
 #############################################################################
 # createSafe(prov_req)
@@ -326,11 +341,28 @@ import json
 import requests
 import logging
 
+
 def createSafe(prov_req):
     logging.debug("================ createSafe() ================")
+
+    # first ensure we have required request values
+    required_keys = ["cybr_subdomain", "session_token", "safe_name"]
+    for rkey in required_keys:
+        input_val = prov_req.get(rkey, None)
+        if input_val is None:
+            err_msg = f"Request is missing key required for safe creation: {rkey}"
+            logging.error(err_msg)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = err_msg
+
     cybr_subdomain = prov_req["cybr_subdomain"]
     session_token = prov_req["session_token"]
     safe_name = prov_req["safe_name"]
+
+    status_code = 201
+    response_body = f"Safe {safe_name} created successfully."
+
     safe_req = {
         "safeName": safe_name,
         "description": "Created by CybrOnboarding engine.",
@@ -338,10 +370,6 @@ def createSafe(prov_req):
         "managingCPM": "",
         "numberOfDaysRetention": 0,
     }
-
-    status_code = 201
-    response_body = f"Safe {safe_name} created successfully."
-
     url = f"https://{cybr_subdomain}.privilegecloud.cyberark.cloud/passwordvault/api/safes"
     payload = json.dumps(safe_req)
     headers = {
@@ -365,12 +393,12 @@ def createSafe(prov_req):
     return_dict["status_code"] = status_code
     return_dict["response_body"] = response_body
     return return_dict
+
 #############################################################################
 #############################################################################
 # deleteAccount.py
 
 import json
-import sys
 import requests
 import logging
 
@@ -382,6 +410,17 @@ def deleteAccount(prov_req):
     return_dict["status_code"] = 400
     return_dict["response_body"] = response_body
     return return_dict
+
+    # first ensure we have required request values
+    required_keys = ["cybr_subdomain", "session_token", "safe_name"]
+    for rkey in required_keys:
+        input_val = prov_req.get(rkey, None)
+        if input_val is None:
+            err_msg = f"Request is missing key required for account deletion: {rkey}"
+            logging.error(err_msg)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = err_msg
 
     # Extract HTTPS values
     cybr_subdomain = prov_req["cybr_subdomain"]
@@ -446,6 +485,18 @@ import logging
 
 def deleteSafe(prov_req):
     logging.debug("================ deleteSafe() ================")
+
+    # first ensure we have required request values
+    required_keys = ["cybr_subdomain", "session_token", "safe_name"]
+    for rkey in required_keys:
+        input_val = prov_req.get(rkey, None)
+        if input_val is None:
+            err_msg = f"Request is missing key required for safe deletion: {rkey}"
+            logging.error(err_msg)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = err_msg
+
     cybr_subdomain = prov_req["cybr_subdomain"]
     session_token = prov_req["session_token"]
     safe_name = prov_req["safe_name"]
@@ -504,6 +555,8 @@ import logging
 
 def getAuthnCreds():
     logging.debug("================ getAuthnCreds() ================")
+    status_code = 200
+    response_body = "Authentication credentials retrieved."
     admin_creds = {
         "cybr_subdomain": os.environ.get("CYBR_SUBDOMAIN",None),
         "cybr_username": os.environ.get("CYBR_USERNAME",None),
@@ -512,53 +565,61 @@ def getAuthnCreds():
     # Validate all creds have a value, if not exit with error code
     none_keys = [key for key, value in admin_creds.items() if value is None]
     if none_keys:
-        print("Missing one of CYBR_SUBDOMAIN, CYBR_USERNAME, CYBR_PASSWORD in environment variables.")
-        sys.exit(-1)
+        status_code = 400
+        response_body = "Missing one of CYBR_SUBDOMAIN, CYBR_USERNAME, CYBR_PASSWORD in environment variables."
 
-    logging.debug("Authentication credentials retrieved.")
+    logging.info(response_body)
 
-    return admin_creds
+    return_dict = {}
+    return_dict["status_code"] = status_code
+    return_dict["response_body"] = response_body
+    return_dict["admin_creds"] = admin_creds
+    return return_dict
 #############################################################################
 #############################################################################
-# getPlatform.py
+# getPlatformId.py
 
 import json
 import logging
 
 # ====================================================
-# Constant - also referenced in createAccount.py
+# Constants
 PLATFORM_FILE = "./json/platforms.json"  # file with platform mapping k/v pairs
+# PLATFORM_FILE is also referenced in validateRequestWithPlatform.py and createAccount.py
 
 # ====================================================
 # Finds first platform where platform's searchpair values all match the provisioning request's
-# Validates that all keys in provisionng request map to platform properties
-# Returns platform id in response
+# If found, returns status_code == 200 and platform id in response
 
 
-def getPlatform(prov_req):
+def getPlatformId(prov_req):
     logging.debug("================ getPlatformId() ================")
 
-    # ensure provisioning request has accountValues, if not exit w/ error
-    if prov_req.get("accountValues", None) is None:
-        err_msg = "Provisioning request does not contain account values. Unable to determine platform."
-        logging.error(err_msg)
-        return_dict = {}
-        return_dict["status_code"] = 400
-        return_dict["response_body"] = err_msg
-        return_dict["platform_id"] = "NoneFound"
-        print(return_dict)
+    # first ensure we have required request values
+    required_keys = ["cybr_subdomain", "session_token", "safe_name"]
+    for rkey in required_keys:
+        input_val = prov_req.get(rkey, None)
+        if input_val is None:
+            response_body = f"Request is missing key required for platform identification: {rkey}"
+            logging.error(response_body)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = response_body
 
     # load platform dictionary from json file created with compileplats.py
     try:
         with open(PLATFORM_FILE) as f_in:
             platforms = json.load(f_in)
     except IOError:
-        err_msg = f"Could not read file: {PLATFORM_FILE}"
-        logging.error(err_msg)
+        response_body = f"Could not read file: {PLATFORM_FILE}"
+        logging.error(response_body)
         return_dict = {}
         return_dict["status_code"] = 500
-        return_dict["response_body"] = err_msg
+        return_dict["response_body"] = response_body
         return return_dict
+
+    status_code = 200
+    response_body = "Platform found."
 
     # Find platform where platform search keys & values == request keys & values
     plat_id = None
@@ -568,17 +629,15 @@ def getPlatform(prov_req):
         # all k/v pairs in searchpairs must be found in the provisioning request for a match
         pair_counter = len(search_pairs)
         for pkey, pval in search_pairs.items():
-            logging.debug(f"     pkey: {pkey}, pval: {pval}")
+            logging.debug(f"\tpkey: {pkey}, pval: {pval}")
             rval = prov_req.get(pkey, None)  # get value of key in request, if any
             if rval is not None:
-                logging.debug(
-                    f"     platform: ({pkey},{pval}), request: ({pkey},{rval})"
-                )
+                logging.debug(f"\tplatform: ({pkey},{pval}), request: ({pkey},{rval})")
                 if rval.upper() == pval.upper():
                     pair_counter -= 1  # k/v matches, decrement searchpair counter
                     if pair_counter == 0:  # if all k/v pairs have matched...
                         plat_id = pid
-                        logging.info(f"Matching platform ID: {plat_id}")
+                        response_body = f"Matching platform ID: {plat_id}"
                         break
                 else:
                     break  # k/v does not match, on to next platform
@@ -586,49 +645,10 @@ def getPlatform(prov_req):
             break
 
     if plat_id is None:
-        err_msg = "No platform found with searchpairs that match request values."
-        logging.info(err_msg)
+        response_body = "No platform found with searchpairs that match request values."
+        logging.error(response_body)
         status_code = 404
-        response_body = err_msg
         plat_id = "NotFound"
-    else:
-        plat_found = platforms[plat_id]
-        # determine provisioning request keys map to platform properties
-        valid_request = False
-
-        # get list of uppercase request onboarding keys to compare with platform properties
-        prov_list = prov_req["accountValues"].keys()
-        prov_keys = [k.upper() for k in prov_list]
-        # first ensure all request properties are in platform keys
-        logging.debug(f"prov_keys: type: {type(prov_keys)} vals: {prov_keys}")
-        missing_keys = [k for k in prov_keys if k not in plat_found["allkeys"]]
-        valid_request = len(missing_keys) == 0
-        if valid_request:
-            # then ensure all platform required keys are in request
-            missing_keys = [k for k in plat_found["required"] if k not in prov_keys]
-            valid_request = len(missing_keys) == 0
-            if valid_request:
-                status_code = 200
-                response_body = f"Platform {plat_id} is a match for request."
-                logging.info(response_body)
-            else:
-                status_code = 400
-                req_keys = plat_found["required"]
-                prov_keys = sorted(prov_keys)
-                logging.error(
-                    f"{plat_id} required propertie(s) '{missing_keys}' not found in request keys '{prov_keys}''."
-                )
-                response_body = f"One or more required platform properties not found in request keys."
-                plat_id = "Missing-Required-Keys"
-        else:
-            status_code = 400
-            prov_keys = sorted(prov_keys)
-            all_keys = sorted(plat_found["allkeys"])
-            logging.error(
-                f"Request keys '{missing_keys}' not found in {plat_id} properties: '{all_keys}'."
-            )
-            response_body = f"One or more keys in the onboarding request were not found in the {plat_id} platform properties."
-            plat_id = "Request-Platform-KeyMismatch"
 
     logging.debug(f"\tstatus_code: {status_code}\n\tresponse: {response_body}")
 
@@ -656,7 +676,8 @@ def getSHFilterForSafe(prov_req):
     logging.debug("================ getSHFilterForSafe() ================")
 
     # -------------------------------------------
-    def createSHFilterForSafe(prov_req):
+    # NOTE: cybr_subdomain, source_store_id, safe_name are global vars to this function
+    def createSHFilterForSafe():
         logging.debug("================ createSHFilterForSafe() ================")
         filter_id = ""
         url = f"https://{cybr_subdomain}.secretshub.cyberark.cloud/api/secret-stores/{source_store_id}/filters"
@@ -683,6 +704,16 @@ def getSHFilterForSafe(prov_req):
         return filter_id, status_code, response_body
 
     # -------------------------------------------
+    # first ensure we have required request values
+    required_keys = ["cybr_subdomain", "session_token", "safe_name", "source_store_id"]
+    for rkey in required_keys:
+        input_val = prov_req.get(rkey, None)
+        if input_val is None:
+            response_body = f"Request is missing key required for Secrets Hub filter retrieval/creation: {rkey}"
+            logging.error(response_body)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = response_body
 
     cybr_subdomain = prov_req["cybr_subdomain"]
     session_token = prov_req["session_token"]
@@ -709,13 +740,12 @@ def getSHFilterForSafe(prov_req):
         )
         foundFilter = [a for a in filters_dict["filters"] if isFilter(a)]
         if len(foundFilter) == 0:  # filter does not exist - create it
-            filter_id, status_code, response_body = createSHFilterForSafe(prov_req)
+            filter_id, status_code, response_body = createSHFilterForSafe()
         elif len(foundFilter) == 1:  # filter already exists - use it
             filter_id = foundFilter.pop()["id"]
-        else:  # more than one filter exists - ambiguous
+        else:  # more than one filter exists - ambiguous - should not happen
             status_code = 300
             response_body = f"More than one filter already exists for store ID {source_store_id} and safe {safe_name}."
-
     else:
         response_body = response.text
 
@@ -743,6 +773,17 @@ import logging
 def getSHSourceStoreId(prov_req):
     logging.debug("================ getSHSourceStoreId() ================")
 
+    # first ensure we have required request values
+    required_keys = ["cybr_subdomain", "session_token"]
+    for rkey in required_keys:
+        input_val = prov_req.get(rkey, None)
+        if input_val is None:
+            response_body = f"Request is missing key required for Secrets Hub source store ID retrieval: {rkey}"
+            logging.error(response_body)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = response_body
+
     cybr_subdomain = prov_req["cybr_subdomain"]
     session_token = prov_req["session_token"]
 
@@ -759,8 +800,8 @@ def getSHSourceStoreId(prov_req):
     status_code = response.status_code
     if status_code == 200:
         stores_dict = json.loads(response.text)
-        isSource = lambda x: "SECRETS_SOURCE" in x["behaviors"]
-        foundSource = [a for a in stores_dict["secretStores"] if isSource(a)]
+        isSource = lambda store: "SECRETS_SOURCE" in store["behaviors"]
+        foundSource = [store for store in stores_dict["secretStores"] if isSource(store)]
         if len(foundSource) == 0:
             status_code = 403
             response_body = "No secret source found."
@@ -807,7 +848,7 @@ def getSHSyncPolicy(prov_req):
         payload = json.dumps(
             {
                 "name": "ASM policy",
-                "description": "Auto-created by onboarding lambda",
+                "description": "Auto-created by onboarding automation",
                 "source": {"id": sstore_id},
                 "target": {"id": tstore_id},
                 "filter": {"id": filter_id},
@@ -833,6 +874,22 @@ def getSHSyncPolicy(prov_req):
         return policy_id, status_code, response_body
 
     # MAIN ====================================================
+    # first ensure we have required request values
+    required_keys = [
+        "cybr_subdomain",
+        "session_token",
+        "source_store_id",
+        "target_store_id",
+        "filter_id",
+    ]
+    for rkey in required_keys:
+        input_val = prov_req.get(rkey, None)
+        if input_val is None:
+            response_body = f"Request is missing key required for Secrets Hub sync policy retrieval/creation: {rkey}"
+            logging.error(response_body)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = response_body
 
     cybr_subdomain = prov_req["cybr_subdomain"]
     session_token = prov_req["session_token"]
@@ -854,10 +911,9 @@ def getSHSyncPolicy(prov_req):
     if status_code == 200:
         policies_dict = json.loads(response.text)
         isPolicy = lambda x: (
-            (x["state"]["current"] == "ENABLED")
-            & (x["source"]["id"] == sstore_id)
+            ((x["source"]["id"] == sstore_id)
             & (x["target"]["id"] == tstore_id)
-            & (x["filter"]["id"] == filter_id)
+            & (x["filter"]["id"] == filter_id))
         )
         foundPolicy = [a for a in policies_dict["policies"] if isPolicy(a)]
         if len(foundPolicy) == 0:  # policy not found - create it
@@ -866,9 +922,14 @@ def getSHSyncPolicy(prov_req):
             )
         elif len(foundPolicy) > 1:
             status_code = 300
-            response_body = "More than one sync policy found for source ID {sstore_id}, filter ID {filter_id}, target ID {tstore_id}."
-        else:
+            response_body = f"More than one sync policy found for source ID {sstore_id}, filter ID {filter_id}, target ID {tstore_id}."
             policy_id = foundPolicy.pop()["id"]
+        else:
+            policy = foundPolicy.pop()
+            policy_id = policy["id"]
+            if policy["state"]["current"] != "ENABLED":
+                status_code = 409
+                response_body = f"Policy ID {policy_id} is not currently enabled."
     else:
         response_body = response.text
 
@@ -885,7 +946,6 @@ def getSHSyncPolicy(prov_req):
 # getSHTargetStoreId.py
 
 import json
-import sys
 import requests
 import logging
 
@@ -896,18 +956,26 @@ import logging
 def getSHTargetStoreId(prov_req):
     logging.debug("================ getSHTargetStoreId() ================")
 
-    required_vals = []
-    required_vals.append(prov_req.get("cloudAccount",None))
-    required_vals.append(prov_req.get("cloudRegion",None))
-    none_keys = [val for val in required_vals if val is None]
-    if none_keys:
-        err_msg = "Missing one of cloudAccount or cloudRegion in provisioning request."
-        print(err_msg)
-        logging.error(err_msg)
-        sys.exit(-1)
+    # first ensure we have required request values
+    required_keys = [
+        "cybr_subdomain",
+        "session_token",
+        "cloudAccount",
+        "cloudRegion"
+    ]
+    for rkey in required_keys:
+        input_val = prov_req.get(rkey, None)
+        if input_val is None:
+            response_body = f"Request is missing key required for Secrets Hub target store retrieval: {rkey}"
+            logging.error(response_body)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = response_body
 
     cybr_subdomain = prov_req["cybr_subdomain"]
     session_token = prov_req["session_token"]
+    account_id = str(prov_req["cloudAccount"])     # str() needed in case acct# is not quoted
+    region_id = prov_req["cloudRegion"]
 
     tstore_id = ""
     status_code = 200
@@ -931,8 +999,6 @@ def getSHTargetStoreId(prov_req):
         allAwsTargets = [t for t in stores_dict["secretStores"] if isAwsTarget(t)]
         logging.debug(f"allAwsTargets: {allAwsTargets}")
 
-        account_id = str(prov_req["cloudAccount"])     # needed in case acct# is not quoted
-        region_id = prov_req["cloudRegion"]
         isTheTarget = lambda x: (
             (x["data"]["accountId"] == account_id)
             & (x["data"]["regionId"] == region_id)
@@ -965,42 +1031,32 @@ def getSHTargetStoreId(prov_req):
 import json
 import logging
 
-# Generates safe name base on provisioning record values.
-
-# Safe name format as implemented: PLT-BILLCODE-ENV-APP
-# - platform: AWS,AZR,GCP,ONP
-# - billcode: verbatim
-# - env: DEV,TST,UAT,PRD
-# - approval: APR,NAP
+# Generates safe name base on provisioning record values and rules
+#  defined in ./json/safenamerules.json (path is relative to function
+#  calling this function).
 
 def getSafeName(prov_req):
 
   with open("./json/safenamerules.json") as sr:
       saferules = json.load(sr)
 
-  # MAIN ========================================================
-  # If above functions and data structures are correct, 
-  #   there should be no need to edit below this line
-
   logging.debug("================ getSafeName() ================")
   status_code = 200
   response_body = "Safe name generated."
   safe_name = ""
 
-  # names of keys in request from which to compose safe name
-  input_keys = [ r["keyname"] for r in saferules ]
-  input_vals = []
-  # first ensure we have input values for each required input_key
-  for idx in range(len(input_keys)):
-    input_val = prov_req.get(input_keys[idx],None)
-    if input_val is not None:
-      input_vals.append(input_val)
-    else:
+  # first ensure we have request values required for rules
+  # get names of request keys in rules from which to compose safe name
+  required_keys = [ r["keyname"] for r in saferules ]
+  for idx in range(len(required_keys)):
+    input_val = prov_req.get(required_keys[idx],None)
+    if input_val is None:
       status_code = 400
-      err_msg = f"Missing key required for safe naming: {input_keys[idx]}"
+      err_msg = f"Missing key required for safe naming: {required_keys[idx]}"
       logging.error(err_msg)
       response_body = err_msg
 
+  # all values converted to uppercase strings for comparisons
   if status_code == 200:
     for rule in saferules:
         keyval = prov_req[rule["keyname"]]
@@ -1017,7 +1073,7 @@ def getSafeName(prov_req):
             case "substring":
                 beg = rule["substring"]["start"]
                 if beg > len(str(keyval)):
-                  beg = 0
+                  beg = 0             # dubious error correction
                 end = rule["substring"]["end"]
                 if end > len(str(keyval)):
                   end = len(str(keyval))
@@ -1043,3 +1099,82 @@ def getSafeName(prov_req):
   return_dict["response_body"] = response_body
   return_dict["safe_name"] = safe_name
   return return_dict
+#############################################################################
+#############################################################################
+# validateRequestWithPlatform.py
+
+import json
+import logging
+
+# ====================================================
+# Validates that all keys in provisionng request map to platform properties
+# Returns status_code == 200 if valid, 400 if not
+
+
+def validateRequestWithPlatform(prov_req):
+    logging.debug("================ validateRequestWithPlatform() ================")
+
+    # first ensure we have request values required for rules
+    # get names of request keys in rules from which to compose safe name
+    required_keys = ["platform_id","accountValues"]
+    for rkey in required_keys:
+        input_val = prov_req.get(rkey, None)
+        if input_val is None:
+            err_msg = f"Request is missing key required for platform validation: {rkey}"
+            logging.error(err_msg)
+            return_dict = {}
+            return_dict["status_code"] = 400
+            return_dict["response_body"] = err_msg
+
+    # load platform dictionary from json file created with compileplats.py
+    # PLATFORM_FILE is a global constant defined in getPlatform.py
+    try:
+        with open(PLATFORM_FILE) as f_in:
+            platforms = json.load(f_in)
+    except IOError:
+        err_msg = f"Could not read file: {PLATFORM_FILE}"
+        logging.error(err_msg)
+        return_dict = {}
+        return_dict["status_code"] = 500
+        return_dict["response_body"] = err_msg
+        return return_dict
+
+    status_code = 200
+    response_body = "Platform is valid"
+
+    # determine if provisioning request keys map to platform properties
+    plat_id = platforms[prov_req["platform_id"]]
+    valid_request = False
+    # get list of uppercase request properties to compare with platform properties
+    prov_keys = [k.upper() for k in prov_req["accountValues"].keys()]
+    # first check if request has properties that are not in platform keys
+    missing_keys = [k for k in prov_keys if k not in plat_id["allkeys"]]
+    valid_request = (len(missing_keys) == 0)
+    if valid_request:
+        # then check if any required platform properties are not in request
+        missing_reqd_keys = [k for k in plat_id["required"] if k not in prov_keys]
+        valid_request = (len(missing_reqd_keys) == 0)
+        if valid_request:
+            status_code = 200
+            response_body = f"Platform {plat_id} is a match for request."
+            logging.info(response_body)
+        else:
+            prov_keys = sorted(prov_keys)
+            status_code = 400
+            response_body = f"{plat_id} required propertie(s) '{missing_reqd_keys}' not found in request keys '{prov_keys}''."
+            logging.error(response_body)
+            plat_id = "Missing-Required-Keys"
+    else:
+        prov_keys = sorted(prov_keys)
+        all_keys = sorted(plat_id["allkeys"])
+        status_code = 400
+        response_body = f"Request keys '{missing_keys}' not found in {plat_id} properties: '{all_keys}'."
+        logging.error(response_body)
+        plat_id = "Request-Platform-KeyMismatch"
+
+    logging.debug(f"\tstatus_code: {status_code}\n\tresponse: {response_body}")
+
+    return_dict = {}
+    return_dict["status_code"] = status_code
+    return_dict["response_body"] = response_body
+    return return_dict
